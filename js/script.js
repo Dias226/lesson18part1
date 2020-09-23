@@ -72,8 +72,8 @@ window.addEventListener("DOMContentLoaded", () => {
   //popup
   const togglePopUp = () => {
     const popup = document.querySelector('.popup'),
-      popupBtn = document.querySelectorAll('.popup-btn'),
-      popUpClose = document.querySelector('.popup-close');
+      popupBtn = document.querySelectorAll('.popup-btn');
+
     let animateIdOpen, animateIdClose;
     let count = 0;
 
@@ -109,20 +109,17 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    popUpClose.addEventListener("click", () => {
-      if (window.innerWidth > 768) {
-        animateIdClose = requestAnimationFrame(animateClose);
-      } else {
-        popup.style.display = "none";
-      }
-    });
     popup.addEventListener('click', event => {
       let target = event.target;
-      target = target.closest('.popup-content');
-
-      if (!target) {
-        popup.style.display = "none";
+      if (target.classList.contains('popup-close')) {
+        animateIdClose = requestAnimationFrame(animateClose);
+      } else {
+        target = target.closest('.popup-content');
+        if (!target) {
+          animateIdClose = requestAnimationFrame(animateClose);
+        }
       }
+
     });
   };
   togglePopUp();

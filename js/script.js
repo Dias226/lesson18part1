@@ -49,7 +49,7 @@ window.addEventListener("DOMContentLoaded", () => {
     updateClock();
   };
 
-  counterTimer("23 september 2020");
+  counterTimer("27 september 2020");
 
   //Menu
   const toggleMenu = () => {
@@ -255,4 +255,34 @@ window.addEventListener("DOMContentLoaded", () => {
     startSlide(2000);
   };
   slider();
+
+  // Our team section (data attributes)
+
+  const changeImage = () => {
+    const img = document.querySelectorAll(".command__photo");
+    img.forEach((item, i) => {
+      item.addEventListener("mouseenter", event => {
+        event.target.src = event.target.dataset.img;
+        event.target.dataset.img = `images/command/command-${i + 1}.jpg`;
+      });
+      item.addEventListener("mouseleave", () => {
+        event.target.src = event.target.dataset.img;
+        event.target.dataset.img = `images/command/command-${i + 1}a.jpg`;
+      });
+    });
+  };
+
+  changeImage();
+
+  // calculator (regular expressions)
+  const calc = () => {
+    const inputCalc = document.querySelectorAll('.calc-block>input');
+    inputCalc.forEach(item => {
+      item.addEventListener('input', () => {
+        item.value = item.value.replace(/\D/g, '');
+      });
+    });
+  };
+
+  calc();
 });

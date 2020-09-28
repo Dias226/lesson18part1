@@ -123,6 +123,26 @@ window.addEventListener("DOMContentLoaded", () => {
   };
   togglePopUp();
 
+  // scrolling through menu items
+
+  const scroll = menuItem => {
+    document.querySelector(`${menuItem}`).scrollIntoView({
+      block: "center",
+      behavior: "smooth",
+    });
+  };
+
+  const scrollToSection = () => {
+    document.querySelectorAll('a[href="#service-block"], menu li>a').forEach(item => {
+      item.addEventListener('click', event => {
+        event.preventDefault();
+        scroll(item.getAttribute('href'));
+      });
+    });
+  };
+
+  scrollToSection();
+
   //Tabs
   const tabs = () => {
     const tabHeader = document.querySelector('.service-header'),

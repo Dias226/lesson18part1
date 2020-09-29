@@ -124,7 +124,6 @@ window.addEventListener("DOMContentLoaded", () => {
   togglePopUp();
 
   // scrolling through menu items
-
   const scroll = menuItem => {
     document.querySelector(`${menuItem}`).scrollIntoView({
       block: "center",
@@ -277,7 +276,6 @@ window.addEventListener("DOMContentLoaded", () => {
   slider();
 
   // Our team section (data attributes)
-
   const changeImage = () => {
     const img = document.querySelectorAll(".command__photo");
     img.forEach((item, i) => {
@@ -291,23 +289,9 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     });
   };
-
   changeImage();
 
-  // check inputs of calculator (regular expressions)
-  const checkInputCalc = () => {
-    const inputCalc = document.querySelectorAll('.calc-block>input');
-    inputCalc.forEach(item => {
-      item.addEventListener('input', () => {
-        item.value = item.value.replace(/\D/g, '');
-      });
-    });
-  };
-
-  checkInputCalc();
-
   // calculator
-
   const calc = price => {
     const calcType = document.querySelector('.calc-type'),
       calcBlock = document.querySelector('.calc-block'),
@@ -370,8 +354,6 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     });
   };
-
   calc(100);
-
 
 });

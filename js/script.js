@@ -356,4 +356,87 @@ window.addEventListener("DOMContentLoaded", () => {
   };
   calc(100);
 
+  //send-ajax-form
+  const sendForm = () => {
+    const errorMessage = "Что-то пошло не так...",
+      loadMessage = "Загрузка...",
+      successMessage = "Спасибо, мы скоро с вами свяжимся";
+
+    const form = document.getElementById("form1"),
+      form2 = document.getElementById("form2"),
+      form3 = document.getElementById("form3");
+
+    const forms = [];
+
+    forms.push(form, form2, form3);
+
+    const statusMessage = document.createElement("div");
+    statusMessage.style.cssText = `font-size: 2rem;
+      color: #fff;`;
+
+    forms.forEach(item => {
+      const input = item.querySelectorAll("input");
+      [...input].forEach(elem => {
+        elem.addEventListener("input", () => {
+          if (elem.classList.contains("form-phone")) {
+            elem.value = elem.value.replace(/[^\+\d]/g, "");
+          } else if (elem.classList.contains("form-email")) {
+            return;
+          } else {
+            elem.value = elem.value.replace(/[^А-Я\s]/gi, "");
+          }
+        });
+      });
+
+      item.addEventListener("submit", e => {
+        e.preventDefault();
+        const input = item.querySelectorAll("input");
+        item.append(statusMessage);
+        statusMessage.textContent = loadMessage;
+
+        const formData = new FormData(item);
+        const body = {};
+
+        formData.forEach((val, key) => {
+          body[key] = val;
+        });
+
+        postData(
+          body,
+          () => {
+            statusMessage.textContent = successMessage;
+            if (item.id !== 'form3') {
+              setTimeout(() => statusMessage.textContent = '', 2000);
+            }
+            input.forEach(item => {
+              item.value = "";
+            });
+          },
+          () => {
+            statusMessage.textContent = errorMessage;
+          }
+        );
+      });
+    });
+
+    const postData = (body, outputData, errorData) => {
+      const request = new XMLHttpRequest();
+      request.addEventListener("readystatechange", () => {
+        if (request.readyState !== 4) {
+          return;
+        }
+        if (request.status === 200) {
+          outputData();
+        } else {
+          errorData(request.status);
+          alert("hello");
+        }
+      });
+      request.open("POST", "server.php");
+      request.setRequestHeader("Content-Type", "application/JSON");
+      request.send(JSON.stringify(body));
+    };
+  };
+  sendForm();
+
 });

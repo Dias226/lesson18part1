@@ -356,87 +356,114 @@ window.addEventListener("DOMContentLoaded", () => {
   };
   calc(100);
 
-  //send-ajax-form
-  const sendForm = () => {
-    const errorMessage = "Что-то пошло не так...",
-      loadMessage = "Загрузка...",
-      successMessage = "Спасибо, мы скоро с вами свяжимся";
+  // Validation
+  const valid = () => {
+    const inputs = document.querySelectorAll('input.calc-item'),
+      phoneInputs = document.querySelectorAll('[type = tel]'),
+      textInputs = document.querySelectorAll('[name="user_name"]'),
+      textMessage = document.querySelector('[name="user_message"]'),
+      forms = document.querySelectorAll('form');
 
-    const form = document.getElementById("form1"),
-      form2 = document.getElementById("form2"),
-      form3 = document.getElementById("form3");
+    forms.forEach(item => item.autocomplete = "off");
 
-    const forms = [];
+    const validText = item => {
+      item.value = item.value.replace(/[^А-Яа-яЁё ]/i, '');
+    };
 
-    forms.push(form, form2, form3);
+    phoneInputs.forEach(phoneInput => {
+      phoneInput.addEventListener('input', () => {
+        phoneInputs.forEach(phoneInput => {
+          phoneInput.addEventListener('input', () => {
+            const thisForm = phoneInput.closest('form'),
+              btnForm = thisForm.querySelector('button');
 
-    const statusMessage = document.createElement("div");
-    statusMessage.style.cssText = `font-size: 2rem;
-      color: #fff;`;
+            const regExp = /^\+?[78]([-()]*\d){10}$/;
 
-    forms.forEach(item => {
-      const input = item.querySelectorAll("input");
-      [...input].forEach(elem => {
-        elem.addEventListener("input", () => {
-          if (elem.classList.contains("form-phone")) {
-            elem.value = elem.value.replace(/[^\+\d]/g, "");
-          } else if (elem.classList.contains("form-email")) {
-            return;
-          } else {
-            elem.value = elem.value.replace(/[^А-Я\s]/gi, "");
-          }
-        });
-      });
-
-      item.addEventListener("submit", e => {
-        e.preventDefault();
-        const input = item.querySelectorAll("input");
-        item.append(statusMessage);
-        statusMessage.textContent = loadMessage;
-
-        const formData = new FormData(item);
-        const body = {};
-
-        formData.forEach((val, key) => {
-          body[key] = val;
-        });
-
-        postData(
-          body,
-          () => {
-            statusMessage.textContent = successMessage;
-            if (item.id !== 'form3') {
-              setTimeout(() => statusMessage.textContent = '', 2000);
+            if (!regExp.test(phoneInput.value)) {
+              phoneInput.style.border = '2px solid red';
+              btnForm.disabled = true;
+            } else {
+              phoneInput.style.border = '';
+              btnForm.disabled = false;
             }
-            input.forEach(item => {
-              item.value = "";
-            });
-          },
-          () => {
-            statusMessage.textContent = errorMessage;
-          }
-        );
+          });
+        });
       });
     });
 
+    inputs.forEach(item => {
+      item.addEventListener('input', () => item.value = item.value.replace(/\D/g, ''));
+    });
+
+    textInputs.forEach(item => {
+      item.addEventListener('input', () => {
+        validText(item);
+      });
+    });
+
+    textMessage.addEventListener('input', () => {
+      validText(textMessage);
+    });
+  };
+
+  valid();
+
+  // Send-ajax-form
+
+  const sendForm = () => {
+    const errorrMessage = 'Что то пошло не так...',
+      loadMessage = 'Загрузка...',
+      successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+
+    const forms = document.querySelectorAll('form');
+
+    const statusMessage = document.createElement('div');
+    statusMessage.style.cssText = `font-size: 2rem; font-weight: bolder; color: green; 
+        text-shadow: 1px 1px 2px black, 0 0 1em black;`;
+
     const postData = (body, outputData, errorData) => {
       const request = new XMLHttpRequest();
-      request.addEventListener("readystatechange", () => {
+      request.addEventListener('readystatechange', () => {
         if (request.readyState !== 4) {
           return;
         }
+
         if (request.status === 200) {
           outputData();
         } else {
           errorData(request.status);
-          alert("hello");
         }
       });
-      request.open("POST", "server.php");
-      request.setRequestHeader("Content-Type", "application/JSON");
+
+      request.open('POST', './server.php');
+      request.setRequestHeader('Content-Type', 'application/json');
+
       request.send(JSON.stringify(body));
     };
+
+    forms.forEach(form => {
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        form.appendChild(statusMessage);
+        statusMessage.innerHTML = loadMessage;
+        const formData = new FormData(form);
+        const body = {};
+
+        formData.forEach((item, key) => body[key] = item);
+
+        postData(body, () => {
+          statusMessage.textContent = successMessage;
+          form.reset();
+        }, error => {
+          statusMessage.textContent = errorrMessage;
+          statusMessage.style.cssText = `font-size: 2rem; font-weight: bolder; color: red; 
+                    text-shadow: 1px 1px 2px black, 0 0 1em black;`;
+          console.error(error);
+        });
+      });
+    });
   };
+
   sendForm();
 
 });

@@ -19,13 +19,7 @@ const counterTimer = deadline => {
   };
 
   //Function of adding 0 before numbers less than 10
-  const checkTime = value => {
-    if (value < 10) {
-      return "0" + value;
-    } else {
-      return value;
-    }
-  };
+  const checkTime = n => (n < 10 ? `0${n}` : n);
 
   const updateClock = () => {
     const timer = getTimerRemaining();

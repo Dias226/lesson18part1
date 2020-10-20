@@ -1,14 +1,22 @@
 const toggleMenu = () => {
-  const menu = document.querySelector("menu"),
-    handlerMenu = () => menu.classList.toggle("active-menu");
-  document.addEventListener('click', event => {
-    let target = event.target;
+  const btnMenu = document.querySelector('.menu'),
+    menu = document.querySelector('menu');
 
-    if (target.matches('menu li>a') || target.closest('.menu')) {
+  const handlerMenu = () => {
+    menu.classList.toggle('active-menu');
+  };
+
+  document.documentElement.addEventListener('click', event => {
+    const target = event.target;
+    if (target.matches('.menu') || target.parentNode === btnMenu) {
       handlerMenu();
-      target = target.closest('.menu');
-    } else if (menu.classList.contains('active-menu')) {
+    } else if (target.matches('.close-btn')) {
+      event.preventDefault();
       handlerMenu();
+    } else if (!target.matches('menu') && !target.matches('li') && menu.classList.contains('active-menu')) {
+      handlerMenu();
+    } else {
+      return;
     }
   });
 };

@@ -20,7 +20,7 @@ import valid from './modules/valid';
 import sendForm from './modules/sendForm';
 
 //Timer
-counterTimer("19 october 2020");
+counterTimer("21 october 2020");
 //Menu
 toggleMenu();
 //popup

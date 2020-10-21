@@ -16,8 +16,10 @@ import tabs from './modules/tabs';
 import slider from './modules/slider';
 import changeImage from './modules/changeImage';
 import calc from './modules/calc';
+import calcValidate from './modules/calcValidate';
 import valid from './modules/valid';
 import sendForm from './modules/sendForm';
+import maskPhone from './modules/maskPhone';
 
 //Timer
 counterTimer("21 october 2020");
@@ -35,7 +37,11 @@ slider();
 changeImage();
 // calculator
 calc(100);
+// calculator Validation
+calcValidate();
 // Validation
 valid();
 // Send-ajax-form
 sendForm();
+// Phone validation
+maskPhone(`[name='user_phone']`);
